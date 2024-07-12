@@ -1,6 +1,6 @@
 package br.com.emerlopes.shoppingcart.infrastructure.security;
 
-import br.com.emerlopes.shoppingcart.application.response.UserRoleEnum;
+import br.com.emerlopes.shoppingcart.application.shared.UserRoleEnum;
 import br.com.emerlopes.shoppingcart.infrastructure.integrations.customerauthentication.CustomerauthenticationClient;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

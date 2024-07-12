@@ -1,4 +1,4 @@
-package br.com.emerlopes.shoppingcart.application.response;
+package br.com.emerlopes.shoppingcart.application.shared;
 
 import lombok.Getter;
 

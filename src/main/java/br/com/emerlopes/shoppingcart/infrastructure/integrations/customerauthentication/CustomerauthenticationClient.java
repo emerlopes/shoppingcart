@@ -1,6 +1,6 @@
 package br.com.emerlopes.shoppingcart.infrastructure.integrations.customerauthentication;
 
-import br.com.emerlopes.shoppingcart.application.response.CustomResponseDTO;
+import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
