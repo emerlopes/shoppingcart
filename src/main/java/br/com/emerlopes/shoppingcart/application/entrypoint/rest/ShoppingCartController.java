@@ -5,6 +5,7 @@ import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.Pr
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductResponseDTO;
 import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
+import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.usecase.AddProductToShoppingCartByUsernameUseCase;
 import br.com.emerlopes.shoppingcart.domain.usecase.CreateShoppingCartByUsernameUseCase;
 import br.com.emerlopes.shoppingcart.domain.usecase.GetAllShoppingCartUseCase;
@@ -12,6 +13,8 @@ import br.com.emerlopes.shoppingcart.domain.usecase.GetShoppingCartByUsernameUse
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/shopping-carts")
@@ -39,9 +42,7 @@ public class ShoppingCartController {
             final @PathVariable("username") String username
     ) {
         final var executionResult = createShoppingCartByUsernameUseCase.execute(username);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(executionResult)
-        );
+        return getShoppingCartResponseDTO(executionResult);
     }
 
     @GetMapping("/{username}")
@@ -49,17 +50,13 @@ public class ShoppingCartController {
             final @PathVariable("username") String username
     ) {
         final var executionResult = getShoppingCartByUsernameUseCase.execute(username);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(executionResult)
-        );
+        return getShoppingCartResponseDTO(executionResult);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllShoppingCarts() {
         final var executionResult = getAllShoppingCartUseCase.execute(null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(executionResult)
-        );
+        return getShoppingCartResponseDTO(executionResult);
     }
 
     @PostMapping("/add-product/{username}")
@@ -78,11 +75,36 @@ public class ShoppingCartController {
                         .build()
         );
 
+        return getShoppingCartResponseDTO(executionResult);
+    }
+
+    private ResponseEntity<?> getShoppingCartResponseDTO(
+            final ShoppingCartDomainEntity executionResult
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(
-                        ProductResponseDTO.builder()
-                                .username(executionResult.getUsername())
-                                .products(executionResult.getProducts().stream()
+                new CustomResponseDTO<>().setData(ProductResponseDTO.builder()
+                        .username(executionResult.getUsername())
+                        .products(executionResult.getProducts().stream()
+                                .map(p -> ProductDTO.builder()
+                                        .name(p.getName())
+                                        .description(p.getDescription())
+                                        .price(p.getPrice())
+                                        .quantity(p.getQuantity())
+                                        .build()
+                                ).toList())
+                        .total(executionResult.getTotal())
+                        .build())
+        );
+    }
+
+    private ResponseEntity<?> getShoppingCartResponseDTO(
+            final List<ShoppingCartDomainEntity> executionResult
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CustomResponseDTO<>().setData(executionResult.stream()
+                        .map(s -> ProductResponseDTO.builder()
+                                .username(s.getUsername())
+                                .products(s.getProducts().stream()
                                         .map(p -> ProductDTO.builder()
                                                 .name(p.getName())
                                                 .description(p.getDescription())
@@ -90,9 +112,9 @@ public class ShoppingCartController {
                                                 .quantity(p.getQuantity())
                                                 .build()
                                         ).toList())
-                                .total(executionResult.getTotal())
+                                .total(s.getTotal())
                                 .build()
-                )
+                        ).toList())
         );
     }
 }
