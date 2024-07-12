@@ -18,8 +18,8 @@ public class ProductEntity {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopping_cart_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "username")
     private ShoppingCartEntity shoppingCart;
 
     private String description;

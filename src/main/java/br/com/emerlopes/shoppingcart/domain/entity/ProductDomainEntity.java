@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class ProductDomainEntity {
+    private String username;
     private String name;
     private String description;
     private BigDecimal price;
