@@ -18,6 +18,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(ShoppingCartNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(ShoppingCartNotFoundException ex) {
+        logger.error("BusinessException occurred: " + ex.getErrorCode() + " - " + ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     public record ErrorResponse(String errorCode, String message) {
 
     }
