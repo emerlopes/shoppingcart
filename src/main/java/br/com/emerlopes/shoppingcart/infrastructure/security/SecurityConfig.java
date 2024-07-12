@@ -1,6 +1,6 @@
 package br.com.emerlopes.shoppingcart.infrastructure.security;
 
-import br.com.emerlopes.shoppingcart.application.response.UserRoleEnum;
+import br.com.emerlopes.shoppingcart.application.shared.UserRoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,10 +38,7 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/produtos/listar-produtos").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/produtos/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/produtos/cadastrar-produtos").hasRole(UserRoleEnum.ADMIN.name())
-                        .requestMatchers(HttpMethod.POST, "/produtos/atualizar/{idProduto}").hasRole(UserRoleEnum.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/shopping-carts/register/{username}").hasRole(UserRoleEnum.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
