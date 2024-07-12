@@ -34,6 +34,7 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
         return ShoppingCartDomainEntity.builder()
                 .username(shoppingCartEntity.getUsername())
                 .products(shoppingCartEntity.getProducts().stream().map(this::toDomainEntity).toList())
+                .total(shoppingCartEntity.getTotal())
                 .build();
     }
 
