@@ -7,6 +7,7 @@ import br.com.emerlopes.shoppingcart.infrastructure.database.entity.ProductEntit
 import br.com.emerlopes.shoppingcart.infrastructure.database.entity.ShoppingCartEntity;
 import br.com.emerlopes.shoppingcart.infrastructure.database.repository.ProductRepository;
 import br.com.emerlopes.shoppingcart.infrastructure.database.repository.ShoppingCartRepository;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepository {
 
+    private final static Logger logger = org.slf4j.LoggerFactory.getLogger(ShoppingCartDomainRepositoryImpl.class);
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
 
@@ -30,24 +32,44 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
     public ShoppingCartDomainEntity createShoppingCartByUserName(
             final String username
     ) {
+        final var isShoppingCartAlreadyCreated = shoppingCartRepository.existsById(username);
+
+        if (isShoppingCartAlreadyCreated) {
+            logger.info("Shopping cart already created for user {}", username);
+            return this.getShoppingCart(username);
+        }
+
         final var shoppingCartEntity = shoppingCartRepository.save(this.toEntity(username));
-        return ShoppingCartDomainEntity.builder()
-                .username(shoppingCartEntity.getUsername())
-                .products(shoppingCartEntity.getProducts().stream().map(this::toDomainEntity).toList())
-                .total(shoppingCartEntity.getTotal())
-                .build();
+
+        logger.info("Shopping cart created for user {}", username);
+
+        return this.toDomainEntity(shoppingCartEntity);
     }
 
     @Override
     public ShoppingCartDomainEntity getShoppingCart(
             final String username
     ) {
-        return shoppingCartRepository.findById(username)
-                .map(shoppingCartEntity -> ShoppingCartDomainEntity.builder()
-                        .username(shoppingCartEntity.getUsername())
-                        .products(shoppingCartEntity.getProducts().stream().map(this::toDomainEntity).toList())
-                        .build())
-                .orElseThrow();
+        final var shoppingCartEntity = shoppingCartRepository.findById(username);
+
+        if (shoppingCartEntity.isEmpty()) {
+            logger.info("Shopping cart not found for user {}", username);
+            return this.createShoppingCartByUserName(username);
+        }
+
+        logger.info("Shopping cart found for user {}", username);
+
+        return this.toDomainEntity(shoppingCartEntity.get());
+    }
+
+    private ShoppingCartDomainEntity toDomainEntity(
+            final ShoppingCartEntity shoppingCart
+    ) {
+        return ShoppingCartDomainEntity.builder()
+                .username(shoppingCart.getUsername())
+                .products(shoppingCart.getProducts().stream().map(this::toDomainEntity).toList())
+                .total(shoppingCart.getTotal())
+                .build();
     }
 
     private ShoppingCartEntity toEntity(

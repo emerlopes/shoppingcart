@@ -5,10 +5,7 @@ import br.com.emerlopes.shoppingcart.domain.usecase.CreateShoppingCartByUsername
 import br.com.emerlopes.shoppingcart.domain.usecase.GetShoppingCartByUsernameUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/shopping-carts")
@@ -29,8 +26,17 @@ public class ShoppingCartController {
     public ResponseEntity<?> registerShoppingCart(
             final @PathVariable("username") String username
     ) {
-
         final var executionResult = createShoppingCartByUsernameUseCase.execute(username);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CustomResponseDTO<>().setData(executionResult)
+        );
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getShoppingCart(
+            final @PathVariable("username") String username
+    ) {
+        final var executionResult = getShoppingCartByUsernameUseCase.execute(username);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CustomResponseDTO<>().setData(executionResult)
         );
