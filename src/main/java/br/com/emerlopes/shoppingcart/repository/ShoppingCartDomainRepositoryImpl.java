@@ -81,6 +81,12 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
         }
 
         shoppingCartEntity.getProducts().add(product);
+        shoppingCartEntity.setTotal(
+                shoppingCartEntity.getTotal().add(
+                        product.getPrice().multiply(
+                                BigDecimal.valueOf(product.getQuantity())
+                        )
+                ));
 
         return this.toDomainEntity(shoppingCartRepository.save(shoppingCartEntity));
     }
