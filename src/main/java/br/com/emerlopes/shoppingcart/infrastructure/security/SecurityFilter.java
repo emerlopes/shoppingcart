@@ -59,7 +59,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             final var login = jwt.getSubject();
             final var roles = jwt.getClaim("roles").asList(String.class);
 
-            if (roles.toString().contains(UserRoleEnum.ADMIN.name())) {
+            if (roles.toString().contains(UserRoleEnum.ADMIN.name()) || roles.toString().contains(UserRoleEnum.USER.name())) {
                 final var customerByLogin = customerauthenticationClient.getCustomerByLogin("Bearer " + token, login);
 
                 if (customerByLogin.isEmpty()) {

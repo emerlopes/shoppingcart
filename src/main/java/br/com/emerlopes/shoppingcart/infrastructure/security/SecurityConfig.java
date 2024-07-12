@@ -38,7 +38,7 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/shopping-carts/register/{username}").hasRole(UserRoleEnum.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/shopping-carts/register/{username}").hasRole(UserRoleEnum.USER.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
