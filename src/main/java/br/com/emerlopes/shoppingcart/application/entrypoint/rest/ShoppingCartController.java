@@ -23,19 +23,22 @@ public class ShoppingCartController {
     private final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase;
     private final GetAllShoppingCartUseCase getAllShoppingCartUseCase;
     private final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase;
+    private final RemoveProductFromShoppingCartByUsernameUseCase removeProductFromShoppingCartByUsernameUseCase;
 
     public ShoppingCartController(
             final CreateShoppingCartByUsernameUseCase createShoppingCartByUsernameUseCase,
             final GetShoppingCartByUsernameUseCase getShoppingCartByUsernameUseCase,
             final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase,
             final GetAllShoppingCartUseCase getAllShoppingCartUseCase,
-            final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase
+            final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase,
+            final RemoveProductFromShoppingCartByUsernameUseCase removeProductFromShoppingCartByUsernameUseCase
     ) {
         this.createShoppingCartByUsernameUseCase = createShoppingCartByUsernameUseCase;
         this.getShoppingCartByUsernameUseCase = getShoppingCartByUsernameUseCase;
         this.addProductToShoppingCartByUsernameUseCase = addProductToShoppingCartByUsernameUseCase;
         this.getAllShoppingCartUseCase = getAllShoppingCartUseCase;
         this.deleteShoppingCartByUsernameUseCase = deleteShoppingCartByUsernameUseCase;
+        this.removeProductFromShoppingCartByUsernameUseCase = removeProductFromShoppingCartByUsernameUseCase;
     }
 
     @PostMapping("/register/{username}")
@@ -85,6 +88,21 @@ public class ShoppingCartController {
     ) {
         deleteShoppingCartByUsernameUseCase.execute(username);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/remove-product/{username}")
+    public ResponseEntity<?> removeProductFromShoppingCart(
+            final @PathVariable("username") String username,
+            final @RequestBody ProductRequestDTO productRequestDTO
+    ) {
+        final var executionResult = removeProductFromShoppingCartByUsernameUseCase.execute(
+                ProductDomainEntity.builder()
+                        .username(username)
+                        .name(productRequestDTO.getName())
+                        .build()
+        );
+
+        return getShoppingCartResponseDTO(executionResult);
     }
 
     private ResponseEntity<?> getShoppingCartResponseDTO(

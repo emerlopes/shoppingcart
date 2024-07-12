@@ -10,6 +10,7 @@ import br.com.emerlopes.shoppingcart.infrastructure.database.repository.ProductR
 import br.com.emerlopes.shoppingcart.infrastructure.database.repository.ShoppingCartRepository;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -98,8 +99,30 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
     }
 
     @Override
-    public ShoppingCartDomainEntity removeProductFromShoppingCart(ProductDomainEntity productDomainEntity) {
-        return null;
+    @Transactional
+    public ShoppingCartDomainEntity removeProductFromShoppingCart(
+            final ProductDomainEntity productDomainEntity
+    ) {
+        final var username = productDomainEntity.getUsername();
+        final var isShoppingCartAlreadyCreated = this.isShoppingCartAlreadyCreated(username);
+
+        if (!isShoppingCartAlreadyCreated) {
+            try {
+                throw new UsernameNotFoundException("Shopping cart not found for user " + username, "shopping_cart_not_found");
+            } catch (UsernameNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        productRepository.deleteByName(productDomainEntity.getName());
+
+        final var shoppingCartEntity = shoppingCartRepository.findById(username).get();
+        productRepository.findByShoppingCartUsername(username);
+
+        logger.info("Product {} removed from shopping cart", productDomainEntity.getName());
+
+        return this.toDomainEntity(shoppingCartEntity);
+
     }
 
     @Override
