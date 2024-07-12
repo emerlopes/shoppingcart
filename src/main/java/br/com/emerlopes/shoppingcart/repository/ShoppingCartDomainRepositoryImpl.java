@@ -1,5 +1,6 @@
 package br.com.emerlopes.shoppingcart.repository;
 
+import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundException;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.repository.ShoppingCartDomainRepository;
@@ -94,6 +95,29 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
     @Override
     public List<ShoppingCartDomainEntity> getAllShoppingCarts() {
         return shoppingCartRepository.findAll().stream().map(this::toDomainEntity).toList();
+    }
+
+    @Override
+    public ShoppingCartDomainEntity removeProductFromShoppingCart(ProductDomainEntity productDomainEntity) {
+        return null;
+    }
+
+    @Override
+    public void deleteShoppingCart(
+            final String username
+    ) {
+        final var isShoppingCartAlreadyCreated = this.isShoppingCartAlreadyCreated(username);
+
+        if (!isShoppingCartAlreadyCreated) {
+            try {
+                throw new UsernameNotFoundException("Shopping cart not found for user " + username, "shopping_cart_not_found");
+            } catch (UsernameNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        shoppingCartRepository.deleteById(username);
+        logger.info("Shopping cart deleted for user {}", username);
     }
 
     private boolean isShoppingCartAlreadyCreated(

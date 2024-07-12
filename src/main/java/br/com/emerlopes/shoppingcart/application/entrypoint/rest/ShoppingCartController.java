@@ -3,13 +3,11 @@ package br.com.emerlopes.shoppingcart.application.entrypoint.rest;
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.request.ProductRequestDTO;
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductDTO;
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductResponseDTO;
+import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundException;
 import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
-import br.com.emerlopes.shoppingcart.domain.usecase.AddProductToShoppingCartByUsernameUseCase;
-import br.com.emerlopes.shoppingcart.domain.usecase.CreateShoppingCartByUsernameUseCase;
-import br.com.emerlopes.shoppingcart.domain.usecase.GetAllShoppingCartUseCase;
-import br.com.emerlopes.shoppingcart.domain.usecase.GetShoppingCartByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +22,20 @@ public class ShoppingCartController {
     private final GetShoppingCartByUsernameUseCase getShoppingCartByUsernameUseCase;
     private final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase;
     private final GetAllShoppingCartUseCase getAllShoppingCartUseCase;
+    private final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase;
 
     public ShoppingCartController(
             final CreateShoppingCartByUsernameUseCase createShoppingCartByUsernameUseCase,
             final GetShoppingCartByUsernameUseCase getShoppingCartByUsernameUseCase,
             final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase,
-            final GetAllShoppingCartUseCase getAllShoppingCartUseCase
+            final GetAllShoppingCartUseCase getAllShoppingCartUseCase,
+            final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase
     ) {
         this.createShoppingCartByUsernameUseCase = createShoppingCartByUsernameUseCase;
         this.getShoppingCartByUsernameUseCase = getShoppingCartByUsernameUseCase;
         this.addProductToShoppingCartByUsernameUseCase = addProductToShoppingCartByUsernameUseCase;
         this.getAllShoppingCartUseCase = getAllShoppingCartUseCase;
+        this.deleteShoppingCartByUsernameUseCase = deleteShoppingCartByUsernameUseCase;
     }
 
     @PostMapping("/register/{username}")
@@ -54,7 +55,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllShoppingCarts() {
+    public ResponseEntity<?> getAllShoppingCarts() throws UsernameNotFoundException {
         final var executionResult = getAllShoppingCartUseCase.execute(null);
         return getShoppingCartResponseDTO(executionResult);
     }
@@ -76,6 +77,14 @@ public class ShoppingCartController {
         );
 
         return getShoppingCartResponseDTO(executionResult);
+    }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> deleteShoppingCart(
+            final @PathVariable("username") String username
+    ) {
+        deleteShoppingCartByUsernameUseCase.execute(username);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private ResponseEntity<?> getShoppingCartResponseDTO(
