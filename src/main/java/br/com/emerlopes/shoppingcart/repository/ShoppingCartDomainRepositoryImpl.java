@@ -32,10 +32,10 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
     public ShoppingCartDomainEntity createShoppingCartByUserName(
             final String username
     ) {
-        final var isShoppingCartAlreadyCreated = shoppingCartRepository.existsById(username);
+
+        final var isShoppingCartAlreadyCreated = this.isShoppingCartAlreadyCreated(username);
 
         if (isShoppingCartAlreadyCreated) {
-            logger.info("Shopping cart already created for user {}", username);
             return this.getShoppingCart(username);
         }
 
@@ -53,13 +53,56 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
         final var shoppingCartEntity = shoppingCartRepository.findById(username);
 
         if (shoppingCartEntity.isEmpty()) {
-            logger.info("Shopping cart not found for user {}", username);
             return this.createShoppingCartByUserName(username);
         }
 
         logger.info("Shopping cart found for user {}", username);
 
         return this.toDomainEntity(shoppingCartEntity.get());
+    }
+
+    @Override
+    public ShoppingCartDomainEntity addProductToShoppingCart(
+            final ProductDomainEntity productDomainEntity
+    ) {
+        final var username = productDomainEntity.getUsername();
+        final var isShoppingCartAlreadyCreated = this.isShoppingCartAlreadyCreated(username);
+
+        if (!isShoppingCartAlreadyCreated) {
+            this.createShoppingCartByUserName(username);
+        }
+
+        final var shoppingCartEntity = shoppingCartRepository.findById(username).get();
+        final var product = this.toEntity(productDomainEntity, shoppingCartEntity);
+
+        if (shoppingCartEntity.getProducts().stream().anyMatch(p -> p.getName().equals(product.getName()))) {
+            logger.info("Product {} already added to shopping cart", product.getName());
+            return this.toDomainEntity(shoppingCartEntity);
+        }
+
+        shoppingCartEntity.getProducts().add(product);
+
+        return this.toDomainEntity(shoppingCartRepository.save(shoppingCartEntity));
+    }
+
+    @Override
+    public List<ShoppingCartDomainEntity> getAllShoppingCarts() {
+        return shoppingCartRepository.findAll().stream().map(this::toDomainEntity).toList();
+    }
+
+    private boolean isShoppingCartAlreadyCreated(
+            final String username
+    ) {
+        final var isShoppingCartAlreadyCreated = shoppingCartRepository.existsById(username);
+
+        if (isShoppingCartAlreadyCreated) {
+            logger.info("Shopping cart already created for user {}", username);
+            return true;
+        }
+
+        logger.info("Shopping cart not found for user {}", username);
+
+        return false;
     }
 
     private ShoppingCartDomainEntity toDomainEntity(
@@ -69,16 +112,6 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
                 .username(shoppingCart.getUsername())
                 .products(shoppingCart.getProducts().stream().map(this::toDomainEntity).toList())
                 .total(shoppingCart.getTotal())
-                .build();
-    }
-
-    private ShoppingCartEntity toEntity(
-            final ShoppingCartDomainEntity shoppingCart
-    ) {
-        return ShoppingCartEntity.builder()
-                .username(shoppingCart.getUsername())
-                .products(List.of())
-                .total(BigDecimal.ZERO)
                 .build();
     }
 
@@ -100,6 +133,26 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
+                .build();
+    }
+
+    private List<ProductEntity> toEntity(
+            final List<ProductDomainEntity> product,
+            final ShoppingCartEntity shoppingCart
+    ) {
+        return product.stream().map(p -> this.toEntity(p, shoppingCart)).toList();
+    }
+
+    private ProductEntity toEntity(
+            final ProductDomainEntity product,
+            final ShoppingCartEntity shoppingCart
+    ) {
+        return ProductEntity.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .shoppingCart(shoppingCart)
                 .build();
     }
 }
