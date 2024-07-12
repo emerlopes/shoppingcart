@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/shopping-carts/register/{username}").hasRole(UserRoleEnum.USER.name())
                         .requestMatchers(HttpMethod.POST, "/shopping-carts/add-product/{username}").hasRole(UserRoleEnum.USER.name())
                         .requestMatchers(HttpMethod.GET, "/shopping-carts/{username}").hasRole(UserRoleEnum.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/shopping-carts").hasRole(UserRoleEnum.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/shopping-carts/{username}").hasRole(UserRoleEnum.USER.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
