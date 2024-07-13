@@ -2,7 +2,7 @@ package br.com.emerlopes.shoppingcart.application.entrypoint.rest;
 
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.request.ProductRequestDTO;
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductDTO;
-import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductResponseDTO;
+import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ShoppingCartResponseDTO;
 import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundException;
 import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
@@ -50,7 +50,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getShoppingCart(
+    public ResponseEntity<?> getShoppingCartByUsername(
             final @PathVariable("username") String username
     ) {
         final var executionResult = getShoppingCartByUsernameUseCase.execute(username);
@@ -109,7 +109,7 @@ public class ShoppingCartController {
             final ShoppingCartDomainEntity executionResult
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(ProductResponseDTO.builder()
+                new CustomResponseDTO<>().setData(ShoppingCartResponseDTO.builder()
                         .username(executionResult.getUsername())
                         .products(executionResult.getProducts().stream()
                                 .map(p -> ProductDTO.builder()
@@ -129,7 +129,7 @@ public class ShoppingCartController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new CustomResponseDTO<>().setData(executionResult.stream()
-                        .map(s -> ProductResponseDTO.builder()
+                        .map(s -> ShoppingCartResponseDTO.builder()
                                 .username(s.getUsername())
                                 .products(s.getProducts().stream()
                                         .map(p -> ProductDTO.builder()

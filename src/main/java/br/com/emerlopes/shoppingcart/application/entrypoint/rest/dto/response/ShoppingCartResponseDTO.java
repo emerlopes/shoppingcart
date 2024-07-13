@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class ProductResponseDTO {
+public class ShoppingCartResponseDTO {
     private String username;
     private List<ProductDTO> products;
     private BigDecimal total;
