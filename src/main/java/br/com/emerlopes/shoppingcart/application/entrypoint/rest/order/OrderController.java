@@ -1,6 +1,7 @@
 package br.com.emerlopes.shoppingcart.application.entrypoint.rest.order;
 
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.order.request.OrderRequestDTO;
+import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.OrderDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.shared.OrderStatusEnum;
@@ -57,7 +58,9 @@ public class OrderController {
                         )
                         .build()
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(executionResult);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CustomResponseDTO<>().setData(executionResult)
+        );
     }
 
     @GetMapping("/{orderId}")
@@ -65,7 +68,9 @@ public class OrderController {
             final @PathVariable("orderId") Long orderId
     ) {
         final var executionResult = findOrderByIdUseCase.execute(orderId);
-        return ResponseEntity.status(HttpStatus.OK).body(executionResult);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CustomResponseDTO<>().setData(executionResult)
+        );
     }
 
     @GetMapping("/user/{username}")
@@ -73,7 +78,9 @@ public class OrderController {
             final @PathVariable("username") String username
     ) {
         final var executionResult = findOrderByUsernameUseCase.execute(username);
-        return ResponseEntity.status(HttpStatus.OK).body(executionResult);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CustomResponseDTO<>().setData(executionResult)
+        );
     }
 
     @PostMapping("/update-status/{orderId}")
@@ -90,7 +97,9 @@ public class OrderController {
                         .build()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(executionResult);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CustomResponseDTO<>().setData(executionResult)
+        );
     }
 
 
