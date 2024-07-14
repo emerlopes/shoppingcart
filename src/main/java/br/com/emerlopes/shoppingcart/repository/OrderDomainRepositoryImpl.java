@@ -65,6 +65,37 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
     }
 
     @Override
+    public OrderDomainEntity updateOrderStatus(
+            final OrderDomainEntity order
+    ) {
+
+        final var orderId = order.getId();
+        final var orderStatus = order.getStatus();
+        final var orderEntity = orderRepository.findById(orderId);
+
+        if (orderEntity.isEmpty()) {
+            throw new OrderNotFoundByIdException("Order not found", "ORDER_NOT_FOUND");
+        }
+
+        final var orderToUpdate = orderEntity.get();
+
+        orderToUpdate.setStatus(orderStatus.getStatus());
+
+        final var updatedOrder = orderRepository.save(orderToUpdate);
+
+        logger.info("Order updated: {}", updatedOrder.getOrderId());
+
+        return OrderDomainEntity.builder()
+                .id(updatedOrder.getOrderId())
+                .username(updatedOrder.getUsername())
+                .products(this.toDomainEntity(updatedOrder.getProducts()))
+                .total(updatedOrder.getTotal())
+                .status(OrderStatusEnum.fromString(updatedOrder.getStatus()))
+                .createdAt(updatedOrder.getCreatedAt())
+                .build();
+    }
+
+    @Override
     public OrderDomainEntity getOrderById(
             final Long id
     ) {

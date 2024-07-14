@@ -1,14 +1,13 @@
 package br.com.emerlopes.shoppingcart.application.entrypoint.rest.order;
 
-import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ProductDTO;
-import br.com.emerlopes.shoppingcart.application.entrypoint.rest.dto.response.ShoppingCartResponseDTO;
 import br.com.emerlopes.shoppingcart.application.entrypoint.rest.order.request.OrderRequestDTO;
-import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.OrderDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
+import br.com.emerlopes.shoppingcart.domain.shared.OrderStatusEnum;
 import br.com.emerlopes.shoppingcart.domain.usecase.CreateOrderUseCase;
 import br.com.emerlopes.shoppingcart.domain.usecase.FindOrderByIdUseCase;
 import br.com.emerlopes.shoppingcart.domain.usecase.FindOrderByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.order.UpdateOrderStatusUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +20,18 @@ public class OrderController {
     private final CreateOrderUseCase createOrderUseCase;
     private final FindOrderByIdUseCase findOrderByIdUseCase;
     private final FindOrderByUsernameUseCase findOrderByUsernameUseCase;
+    private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
 
     public OrderController(
             final CreateOrderUseCase createOrderUseCase,
             final FindOrderByIdUseCase findOrderByIdUseCase,
-            final FindOrderByUsernameUseCase findOrderByUsernameUseCase
+            final FindOrderByUsernameUseCase findOrderByUsernameUseCase,
+            final UpdateOrderStatusUseCase updateOrderStatusUseCase
     ) {
         this.createOrderUseCase = createOrderUseCase;
         this.findOrderByIdUseCase = findOrderByIdUseCase;
         this.findOrderByUsernameUseCase = findOrderByUsernameUseCase;
+        this.updateOrderStatusUseCase = updateOrderStatusUseCase;
     }
 
     @PostMapping("/checkout")
@@ -74,29 +76,21 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(executionResult);
     }
 
-    private ResponseEntity<?> getOrderResponseDTO(
-            final OrderDomainEntity executionResult
+    @PostMapping("/update-status/{orderId}")
+    public ResponseEntity<?> updateOrderStatus(
+            final @PathVariable("orderId") Long orderId,
+            final @RequestBody OrderRequestDTO orderRequestDTO
     ) {
-        return getResponseEntity(executionResult);
-    }
-
-    public static ResponseEntity<?> getResponseEntity(
-            final OrderDomainEntity executionResult
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponseDTO<>().setData(ShoppingCartResponseDTO.builder()
-                        .username(executionResult.getUsername())
-                        .products(executionResult.getProducts().stream()
-                                .map(p -> ProductDTO.builder()
-                                        .name(p.getName())
-                                        .description(p.getDescription())
-                                        .price(p.getPrice())
-                                        .quantity(p.getQuantity())
-                                        .build()
-                                ).toList())
-                        .total(executionResult.getTotal())
-                        .build())
+        final var executionResult = updateOrderStatusUseCase.execute(
+                OrderDomainEntity.builder()
+                        .id(orderId)
+                        .status(
+                                OrderStatusEnum.fromString(orderRequestDTO.getStatus())
+                        )
+                        .build()
         );
+
+        return ResponseEntity.status(HttpStatus.OK).body(executionResult);
     }
 
 

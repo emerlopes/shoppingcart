@@ -9,6 +9,10 @@ public interface OrderDomainRepository {
             final OrderDomainEntity order
     );
 
+    OrderDomainEntity updateOrderStatus(
+            final OrderDomainEntity order
+    );
+
     OrderDomainEntity getOrderById(
             final Long id
     );
