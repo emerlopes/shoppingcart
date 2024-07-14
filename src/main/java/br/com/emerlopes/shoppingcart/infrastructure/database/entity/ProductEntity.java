@@ -22,6 +22,10 @@ public class ProductEntity {
     @JoinColumn(name = "username")
     private ShoppingCartEntity shoppingCart;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
+
     private String description;
     private BigDecimal price;
     private Integer quantity;
