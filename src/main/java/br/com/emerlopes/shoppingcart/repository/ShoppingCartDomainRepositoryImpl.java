@@ -117,7 +117,18 @@ public class ShoppingCartDomainRepositoryImpl implements ShoppingCartDomainRepos
         productRepository.deleteByName(productDomainEntity.getName());
 
         final var shoppingCartEntity = shoppingCartRepository.findById(username).get();
-        productRepository.findByShoppingCartUsername(username);
+
+        final var x = productRepository.findByShoppingCartUsername(username);
+
+        shoppingCartEntity.setProducts(x);
+
+        final var total = shoppingCartEntity.getProducts().stream()
+                .map(p -> p.getPrice().multiply(BigDecimal.valueOf(p.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        shoppingCartEntity.setTotal(total);
+
+        shoppingCartRepository.save(shoppingCartEntity);
 
         logger.info("Product {} removed from shopping cart", productDomainEntity.getName());
 

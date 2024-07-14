@@ -7,7 +7,7 @@ import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundExce
 import br.com.emerlopes.shoppingcart.application.shared.CustomResponseDTO;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
-import br.com.emerlopes.shoppingcart.domain.usecase.*;
+import br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class ShoppingCartController {
     private final GetShoppingCartByUsernameUseCase getShoppingCartByUsernameUseCase;
     private final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase;
     private final GetAllShoppingCartUseCase getAllShoppingCartUseCase;
-    private final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase;
+    private final DeleteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase;
     private final RemoveProductFromShoppingCartByUsernameUseCase removeProductFromShoppingCartByUsernameUseCase;
 
     public ShoppingCartController(
@@ -30,7 +30,7 @@ public class ShoppingCartController {
             final GetShoppingCartByUsernameUseCase getShoppingCartByUsernameUseCase,
             final AddProductToShoppingCartByUsernameUseCase addProductToShoppingCartByUsernameUseCase,
             final GetAllShoppingCartUseCase getAllShoppingCartUseCase,
-            final DetelteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase,
+            final DeleteShoppingCartByUsernameUseCase deleteShoppingCartByUsernameUseCase,
             final RemoveProductFromShoppingCartByUsernameUseCase removeProductFromShoppingCartByUsernameUseCase
     ) {
         this.createShoppingCartByUsernameUseCase = createShoppingCartByUsernameUseCase;

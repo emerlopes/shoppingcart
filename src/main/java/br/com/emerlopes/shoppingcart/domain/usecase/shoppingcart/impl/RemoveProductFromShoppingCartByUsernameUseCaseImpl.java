@@ -1,9 +1,9 @@
-package br.com.emerlopes.shoppingcart.domain.usecase.impl;
+package br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.impl;
 
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.repository.ShoppingCartDomainRepository;
-import br.com.emerlopes.shoppingcart.domain.usecase.RemoveProductFromShoppingCartByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.RemoveProductFromShoppingCartByUsernameUseCase;
 import org.springframework.stereotype.Service;
 
 @Service

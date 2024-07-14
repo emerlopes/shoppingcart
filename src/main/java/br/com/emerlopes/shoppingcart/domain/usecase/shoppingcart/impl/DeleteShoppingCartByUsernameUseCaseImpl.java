@@ -1,15 +1,15 @@
-package br.com.emerlopes.shoppingcart.domain.usecase.impl;
+package br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.impl;
 
 import br.com.emerlopes.shoppingcart.domain.repository.ShoppingCartDomainRepository;
-import br.com.emerlopes.shoppingcart.domain.usecase.DetelteShoppingCartByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.DeleteShoppingCartByUsernameUseCase;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DetelteShoppingCartByUsernameUseCaseImpl implements DetelteShoppingCartByUsernameUseCase {
+public class DeleteShoppingCartByUsernameUseCaseImpl implements DeleteShoppingCartByUsernameUseCase {
 
     private final ShoppingCartDomainRepository shoppingCartRepository;
 
-    public DetelteShoppingCartByUsernameUseCaseImpl(
+    public DeleteShoppingCartByUsernameUseCaseImpl(
             final ShoppingCartDomainRepository shoppingCartRepository
     ) {
         this.shoppingCartRepository = shoppingCartRepository;

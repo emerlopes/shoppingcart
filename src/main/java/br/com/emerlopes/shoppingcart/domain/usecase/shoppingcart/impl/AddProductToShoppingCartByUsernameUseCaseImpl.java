@@ -1,9 +1,9 @@
-package br.com.emerlopes.shoppingcart.domain.usecase.impl;
+package br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.impl;
 
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.repository.ShoppingCartDomainRepository;
-import br.com.emerlopes.shoppingcart.domain.usecase.AddProductToShoppingCartByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart.AddProductToShoppingCartByUsernameUseCase;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
-package br.com.emerlopes.shoppingcart.domain.usecase;
+package br.com.emerlopes.shoppingcart.domain.usecase.shoppingcart;
 
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.shared.IExecuteArgs;
 
-public interface AddProductToShoppingCartByUsernameUseCase extends IExecuteArgs<ShoppingCartDomainEntity, ProductDomainEntity> {
+public interface RemoveProductFromShoppingCartByUsernameUseCase extends IExecuteArgs<ShoppingCartDomainEntity, ProductDomainEntity> {
 }
