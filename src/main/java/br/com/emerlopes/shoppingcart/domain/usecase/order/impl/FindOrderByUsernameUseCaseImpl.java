@@ -1,8 +1,8 @@
-package br.com.emerlopes.shoppingcart.domain.usecase.impl;
+package br.com.emerlopes.shoppingcart.domain.usecase.order.impl;
 
 import br.com.emerlopes.shoppingcart.domain.entity.OrderDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.repository.OrderDomainRepository;
-import br.com.emerlopes.shoppingcart.domain.usecase.FindOrderByUsernameUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.order.FindOrderByUsernameUseCase;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

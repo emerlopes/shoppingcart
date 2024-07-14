@@ -1,9 +1,9 @@
-package br.com.emerlopes.shoppingcart.domain.usecase.impl;
+package br.com.emerlopes.shoppingcart.domain.usecase.order.impl;
 
 import br.com.emerlopes.shoppingcart.domain.entity.OrderDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.repository.OrderDomainRepository;
 import br.com.emerlopes.shoppingcart.domain.shared.OrderStatusEnum;
-import br.com.emerlopes.shoppingcart.domain.usecase.CreateOrderUseCase;
+import br.com.emerlopes.shoppingcart.domain.usecase.order.CreateOrderUseCase;
 import org.springframework.stereotype.Service;
 
 @Service
