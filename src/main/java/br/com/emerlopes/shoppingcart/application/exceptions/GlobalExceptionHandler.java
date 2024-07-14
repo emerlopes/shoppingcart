@@ -13,14 +13,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(UsernameNotFoundException ex) {
-        logger.error("BusinessException occurred: " + ex.getErrorCode() + " - " + ex.getMessage());
+        logger.error("UsernameNotFoundException occurred: {} - {}", ex.getErrorCode(), ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(ShoppingCartNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(ShoppingCartNotFoundException ex) {
-        logger.error("BusinessException occurred: " + ex.getErrorCode() + " - " + ex.getMessage());
+        logger.error("ShoppingCartNotFoundException occurred: {} - {}", ex.getErrorCode(), ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(OrderNotFoundByIdException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(OrderNotFoundByIdException ex) {
+        logger.error("OrderNotFoundByIdException occurred: {} - {}", ex.getErrorCode(), ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -28,4 +35,5 @@ public class GlobalExceptionHandler {
     public record ErrorResponse(String errorCode, String message) {
 
     }
+
 }
