@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/orders/checkout").hasRole(UserRoleEnum.USER.name())
                         .requestMatchers(HttpMethod.GET, "/orders/{orderId}").hasRole(UserRoleEnum.USER.name())
                         .requestMatchers(HttpMethod.GET, "/orders/user/{username}").hasRole(UserRoleEnum.USER.name())
+                        .requestMatchers(HttpMethod.POST, "/orders/update-status/{orderId}").hasRole(UserRoleEnum.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);

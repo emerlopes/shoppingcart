@@ -61,6 +61,40 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                 .total(savedOrder.getTotal())
                 .status(OrderStatusEnum.fromString(savedOrder.getStatus()))
                 .createdAt(savedOrder.getCreatedAt())
+                .updatedAt(savedOrder.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public OrderDomainEntity updateOrderStatus(
+            final OrderDomainEntity order
+    ) {
+
+        final var orderId = order.getId();
+        final var orderStatus = order.getStatus();
+        final var orderEntity = orderRepository.findById(orderId);
+
+        if (orderEntity.isEmpty()) {
+            throw new OrderNotFoundByIdException("Order not found", "ORDER_NOT_FOUND");
+        }
+
+        final var orderToUpdate = orderEntity.get();
+
+        orderToUpdate.setStatus(orderStatus.getStatus());
+        orderToUpdate.setUpdatedAt(LocalDateTime.now());
+
+        final var updatedOrder = orderRepository.save(orderToUpdate);
+
+        logger.info("Order updated: {}", updatedOrder.getOrderId());
+
+        return OrderDomainEntity.builder()
+                .id(updatedOrder.getOrderId())
+                .username(updatedOrder.getUsername())
+                .products(this.toDomainEntity(updatedOrder.getProducts()))
+                .total(updatedOrder.getTotal())
+                .status(OrderStatusEnum.fromString(updatedOrder.getStatus()))
+                .createdAt(updatedOrder.getCreatedAt())
+                .updatedAt(updatedOrder.getUpdatedAt())
                 .build();
     }
 
@@ -86,6 +120,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                 .total(order.getTotal())
                 .status(OrderStatusEnum.fromString(order.getStatus()))
                 .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
                 .build();
     }
 
@@ -111,6 +146,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                         .total(or.getTotal())
                         .status(OrderStatusEnum.fromString(or.getStatus()))
                         .createdAt(or.getCreatedAt())
+                        .updatedAt(or.getUpdatedAt())
                         .build()
                 )
                 .toList();

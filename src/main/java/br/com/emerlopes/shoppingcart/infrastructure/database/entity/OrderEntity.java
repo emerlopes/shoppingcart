@@ -27,5 +27,6 @@ public class OrderEntity {
     private BigDecimal total;
     private String status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }
