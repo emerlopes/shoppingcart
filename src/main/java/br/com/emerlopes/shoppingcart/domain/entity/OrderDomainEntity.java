@@ -17,4 +17,5 @@ public class OrderDomainEntity {
     private BigDecimal total;
     private OrderStatusEnum status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

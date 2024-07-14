@@ -61,6 +61,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                 .total(savedOrder.getTotal())
                 .status(OrderStatusEnum.fromString(savedOrder.getStatus()))
                 .createdAt(savedOrder.getCreatedAt())
+                .updatedAt(savedOrder.getUpdatedAt())
                 .build();
     }
 
@@ -80,6 +81,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
         final var orderToUpdate = orderEntity.get();
 
         orderToUpdate.setStatus(orderStatus.getStatus());
+        orderToUpdate.setUpdatedAt(LocalDateTime.now());
 
         final var updatedOrder = orderRepository.save(orderToUpdate);
 
@@ -92,6 +94,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                 .total(updatedOrder.getTotal())
                 .status(OrderStatusEnum.fromString(updatedOrder.getStatus()))
                 .createdAt(updatedOrder.getCreatedAt())
+                .updatedAt(updatedOrder.getUpdatedAt())
                 .build();
     }
 
@@ -117,6 +120,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                 .total(order.getTotal())
                 .status(OrderStatusEnum.fromString(order.getStatus()))
                 .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
                 .build();
     }
 
@@ -142,6 +146,7 @@ public class OrderDomainRepositoryImpl implements OrderDomainRepository {
                         .total(or.getTotal())
                         .status(OrderStatusEnum.fromString(or.getStatus()))
                         .createdAt(or.getCreatedAt())
+                        .updatedAt(or.getUpdatedAt())
                         .build()
                 )
                 .toList();
