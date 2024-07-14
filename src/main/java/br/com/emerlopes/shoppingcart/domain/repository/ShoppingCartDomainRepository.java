@@ -1,6 +1,5 @@
 package br.com.emerlopes.shoppingcart.domain.repository;
 
-import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundException;
 import br.com.emerlopes.shoppingcart.domain.entity.ProductDomainEntity;
 import br.com.emerlopes.shoppingcart.domain.entity.ShoppingCartDomainEntity;
 
@@ -27,7 +26,5 @@ public interface ShoppingCartDomainRepository {
 
     void deleteShoppingCart(
             final String username
-    ) throws UsernameNotFoundException;
-
-
+    );
 }

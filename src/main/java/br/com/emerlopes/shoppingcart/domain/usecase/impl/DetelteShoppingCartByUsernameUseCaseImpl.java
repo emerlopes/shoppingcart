@@ -1,6 +1,5 @@
 package br.com.emerlopes.shoppingcart.domain.usecase.impl;
 
-import br.com.emerlopes.shoppingcart.application.exceptions.UsernameNotFoundException;
 import br.com.emerlopes.shoppingcart.domain.repository.ShoppingCartDomainRepository;
 import br.com.emerlopes.shoppingcart.domain.usecase.DetelteShoppingCartByUsernameUseCase;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,7 @@ public class DetelteShoppingCartByUsernameUseCaseImpl implements DetelteShopping
     public Void execute(
             final String username
     ) {
-        try {
-            shoppingCartRepository.deleteShoppingCart(username);
-        } catch (UsernameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        shoppingCartRepository.deleteShoppingCart(username);
         return null;
     }
 }
